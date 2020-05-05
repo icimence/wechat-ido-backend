@@ -3,7 +3,7 @@
 
 import json
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views import View
 from utils.response import wrap_json_response, ReturnCode, CommonResponseMixin
 from utils.auth import already_authorized, c2s
@@ -72,6 +72,7 @@ def __authorize_by_code(request):
     data = c2s(app_id, code)
     openid = data.get('openid')
     print('get openid: ', openid)
+    print('get nickname: ', nickname)
     if not openid:
         response = wrap_json_response(code=ReturnCode.FAILED, message='auth failed')
         return JsonResponse(data=response, safe=False)
@@ -91,3 +92,13 @@ def __authorize_by_code(request):
 
 def authorize(request):
     return __authorize_by_code(request)
+
+
+def get_status(request):
+    print('call get_status function...')
+    if already_authorized(request):
+        data = {"is_authorized": 1}
+    else:
+        data = {"is_authorized": 0}
+    response = CommonResponseMixin.wrap_json_response(data=data, code=ReturnCode.SUCCESS)
+    return JsonResponse(response, safe=False)
