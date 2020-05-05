@@ -7,7 +7,7 @@
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:C:\Users\icimence\WeChatProjects\wechat-ido\backend\db.sqlite3</jdbc-url>
     </data-source>
-    <data-source source="LOCAL" name="@localhost" uuid="5f8a12b4-0aae-4840-a9f3-a42858a7e872">
+    <data-source source="LOCAL" name="@localhost" uuid="51297901-4801-4baa-9dd5-6786e922914a">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
