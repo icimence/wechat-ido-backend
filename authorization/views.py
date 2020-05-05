@@ -19,9 +19,37 @@ def test_session(request):
 
 class UserView(View, CommonResponseMixin):
     def get(self, request):
+        if not already_authorized(request):
+            response = self.wrap_json_response(code=ReturnCode.SUCCESS)
+            return JsonResponse(data=response, safe=False)
+        open_id = request.session.get('open_id')
+        user = User.objects.get(open_id=open_id)
+        data = {}
+        data['major'] = json.loads(user.major)
+        data['mission'] = json.loads(user.mission)
+        data['type'] = json.loads(user.type)
+        response = self.wrap_json_response(data=data, code=ReturnCode.SUCCESS)
+        print(response)
+        return JsonResponse(data=response, safe=False)
         pass
 
     def post(self, request):
+        if not already_authorized(request):
+            response = self.wrap_json_response(code=ReturnCode.SUCCESS)
+            return JsonResponse(data=response, safe=False)
+        open_id = request.session.get('open_id')
+        user = User.objects.get(open_id=open_id)
+        received_body = request.body.decode('utf-8')
+        received_body = eval(received_body)
+        majors = received_body.get('major')
+        missions = received_body.get('mission')
+        types = received_body.get('type')
+        user.major = json.dumps(majors)
+        user.mission = json.dumps(missions)
+        user.type = json.dumps(types)
+        user.save()
+        response = self.wrap_json_response(data=user.major, code=ReturnCode.SUCCESS, message='modify user info success')
+        return JsonResponse(data=response, safe=False)
         pass
 
 
