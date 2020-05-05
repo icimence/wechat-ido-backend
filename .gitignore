@@ -1,2 +1,6 @@
 /.idea
 /__pycache__
+/authorization/__pycache__
+/backend/__pycache__
+/utils/__pycache__/
+/recommend/__pycache__
