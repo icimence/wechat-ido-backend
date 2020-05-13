@@ -15,5 +15,7 @@ class User(models.Model):
     major = models.TextField(default='[]')
     # 进行任务
     mission = models.TextField(default='[]')
-    # 任务类别0
+    # 任务类别
     type = models.TextField(default='[]')
+    # 我的收藏
+    collection = models.TextField(default='[]')
