@@ -10,8 +10,8 @@ import urllib.request
 
 def getComp():
     filename = "比赛.json"
-    with open(filename, 'a', encoding='utf-8') as file:
-        file.write("[")
+    # with open(filename, 'a', encoding='utf-8') as file:
+    #     file.write("[")
     # urlRequest = "https://book.douban.com/tag/" + urllib.parse.quote(tag) + "?start={}"
     url = "http://www.52jingsai.com/bisai/index.php?jsstatus=2&jsrank=1&jssort=3"
     # 获取诗词类图书的请求
@@ -33,7 +33,7 @@ def getComp():
     count = html.xpath("//dl[@class='bbda list_bbda cl']")
     for info in count:
         length = len(count)
-        info = count[random.randint(0, length)]
+        info = random.choice(count)
         temp_url = "http://www.52jingsai.com/"
         # # 每爬取一本书线程休息随机时间，模拟人类行为
         comp_img = info.xpath("div/a/img/@src")
