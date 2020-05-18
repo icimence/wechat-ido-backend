@@ -96,8 +96,6 @@ def __authorize_by_code(request):
         new_user.save()
 
     response = wrap_json_response(data=openid, code=ReturnCode.SUCCESS, message='auth success.')
-    request.session.save()
-    print(request.session.session_key)
     return JsonResponse(data=response, safe=False)
     pass
 
