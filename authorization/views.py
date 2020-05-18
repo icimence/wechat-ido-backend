@@ -9,21 +9,27 @@ from utils.response import wrap_json_response, ReturnCode, CommonResponseMixin
 from utils.auth import already_authorized, c2s
 
 from .models import User
+from utils.wx.code2session import code2session
+from django.contrib.sessions.models import Session
 
 
 def test_session(request):
     request.session['message'] = 'Test Django Session OK!'
     response = wrap_json_response(code=ReturnCode.SUCCESS)
+    request.session.save()
     return JsonResponse(data=response, safe=False)
 
 
 class UserView(View, CommonResponseMixin):
     def get(self, request):
-        if not already_authorized(request):
+        print('我来看看cookie信息')
+        print(request.COOKIES)
+        openid = request.GET['openid']
+        if not already_authorized(openid):
             response = self.wrap_json_response(code=ReturnCode.SUCCESS)
             return JsonResponse(data=response, safe=False)
-        open_id = request.session.get('open_id')
-        user = User.objects.get(open_id=open_id)
+        # open_id = request.session.get('open_id')
+        user = User.objects.get(open_id=openid)
         data = {}
         data['major'] = json.loads(user.major)
         data['mission'] = json.loads(user.mission)
@@ -35,13 +41,14 @@ class UserView(View, CommonResponseMixin):
         pass
 
     def post(self, request):
-        if not already_authorized(request):
-            response = self.wrap_json_response(code=ReturnCode.SUCCESS)
-            return JsonResponse(data=response, safe=False)
-        open_id = request.session.get('open_id')
-        user = User.objects.get(open_id=open_id)
         received_body = request.body.decode('utf-8')
         received_body = eval(received_body)
+        openid = received_body.get('openid')
+        if not already_authorized(openid):
+            response = self.wrap_json_response(code=ReturnCode.SUCCESS)
+            return JsonResponse(data=response, safe=False)
+        # open_id = request.session.get('open_id')
+        user = User.objects.get(open_id=openid)
         majors = received_body.get('major')
         missions = received_body.get('mission')
         types = received_body.get('type')
@@ -88,7 +95,9 @@ def __authorize_by_code(request):
         print('new user: open_id: %s, nickname: %s' % (openid, nickname) )
         new_user.save()
 
-    response = wrap_json_response(code=ReturnCode.SUCCESS, message='auth success.')
+    response = wrap_json_response(data=openid, code=ReturnCode.SUCCESS, message='auth success.')
+    request.session.save()
+    print(request.session.session_key)
     return JsonResponse(data=response, safe=False)
     pass
 

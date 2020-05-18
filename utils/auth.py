@@ -16,13 +16,13 @@ from authorization.models import User
 
 from utils.wx.crypt import WXBizDataCrypt
 from utils.wx.code2session import code2session
+from django.contrib.sessions.models import Session
 
 
 # 判断是否已经授权
-def already_authorized(request):
+def already_authorized(openid):
     is_authorized = False
-
-    if request.session.get('is_authorized'):
+    if len(openid) > 0:
         is_authorized = True
     return is_authorized
 
@@ -32,6 +32,7 @@ def get_user(request):
         raise Exception('not authorized request')
     open_id = request.session.get('open_id')
     user = User.objects.get(open_id=open_id)
+    request.session.save()
     return user
 
 

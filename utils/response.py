@@ -38,7 +38,8 @@ def wrap_json_response(data=None, code=None, message=None):
         code = ReturnCode.SUCCESS
     if not message:
         message = ReturnCode.message(code)
-    response['data'] = data
+    if data is not None:
+        response['data'] = data
     response['result_code'] = code
     response['message'] = message
     return response
